@@ -3,3 +3,14 @@
 torch
 torchvision
 torchaudio
+transformers
+peft
+bitsandbytes
+trl
+accelerate
+datasets
+networkx
+pydantic
+jupyter
+scikit-learn
+matplotlib

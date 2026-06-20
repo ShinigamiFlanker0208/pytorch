@@ -1,0 +1,40 @@
+services:
+  agent_workspace:
+    build: .
+    container_name: dev_agent_env_2     # fixed name = predictable target for docker exec
+    shm_size: '8gb'
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    depends_on:
+      - ollama_server
+    environment:
+      - OLLAMA_HOST=http://ollama_server:11434
+      - NVIDIA_VISIBLE_DEVICES=all
+    ports:
+      - "32001:32001"                  # REQUIRED for host->container Jupyter access
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  ollama_server:
+    image: ollama/ollama:latest
+    container_name: ollama_backend_2
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11433:11433"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  ollama_data:
